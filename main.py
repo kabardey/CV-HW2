@@ -1,20 +1,12 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QHBoxLayout, QVBoxLayout, QSizePolicy, QMessageBox, QWidget, \
-    QPushButton, QGroupBox, QAction, QFileDialog, qApp
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QHBoxLayout, QVBoxLayout, QMessageBox, QWidget, \
+    QGroupBox, QAction, QFileDialog, qApp
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from PyQt5.QtWidgets import QGridLayout
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtGui import QPixmap, QImage, QIcon
 from PyQt5.QtCore import Qt
-from matplotlib.figure import Figure
-import matplotlib.pyplot as plt
 import numpy as np
 import cv2
-
-##########################################
-## Do not forget to delete "return NotImplementedError"
-## while implementing a function
-########################################
 
 class App(QMainWindow):
     def __init__(self):
