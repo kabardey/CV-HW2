@@ -676,8 +676,6 @@ class App(QMainWindow):
         filters.addMenu(median_filters)
         ## **************************************** ##
 
-
-
         ### 5. create rotate, scale and translate menu ###
         rotate = QMenu('Rotate', self)
         scale = QMenu('Scale', self)
@@ -713,34 +711,6 @@ class App(QMainWindow):
         # ------------------------------------
 
         self.show()
-
-    def histogramButtonClicked(self):
-        if not self.inputLoaded and not self.targetLoaded:
-            # Error: "First load input and target images" in MessageBox
-            return NotImplementedError
-        if not self.inputLoaded:
-            # Error: "Load input image" in MessageBox
-            return NotImplementedError
-        elif not self.targetLoaded:
-            # Error: "Load target image" in MessageBox
-            return NotImplementedError
-
-    def calcHistogram(self, I):
-        # Calculate histogram
-        return NotImplementedError
-
-class PlotCanvas(FigureCanvas):
-    def __init__(self, hist, parent=None, width=5, height=4, dpi=100):
-        return NotImplementedError
-        # Init Canvas
-        self.plotHistogram(hist)
-
-    def plotHistogram(self, hist):
-        return NotImplementedError
-        # Plot histogram
-
-        self.draw()
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
