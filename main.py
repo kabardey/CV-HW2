@@ -95,7 +95,7 @@ class App(QMainWindow):
 
 
     def average_3(self):  # average filter 3x3
-        if (self.count != 1):
+        if (self.count == 0):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -106,7 +106,7 @@ class App(QMainWindow):
 
 
     def average_5(self):  # average filter 5x5
-        if (self.count != 1):
+        if (self.count == 0):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -117,7 +117,7 @@ class App(QMainWindow):
 
 
     def average_7(self):  # average filter 7x7
-        if (self.count != 1):
+        if (self.count == 0):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -128,7 +128,7 @@ class App(QMainWindow):
 
 
     def average_9(self):  # average filter 9x9
-        if (self.count != 1):
+        if (self.count == 0):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -139,7 +139,7 @@ class App(QMainWindow):
 
 
     def average_11(self):  # average filter 11x11
-        if (self.count != 1):
+        if (self.count == 0):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -150,7 +150,7 @@ class App(QMainWindow):
 
 
     def average_13(self):  # average filter 13x13
-        if (self.count != 1):
+        if (self.count == 0):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -161,7 +161,7 @@ class App(QMainWindow):
 
 
     def average_15(self):  # average filter 15x15
-        if (self.count != 1):
+        if (self.count == 0):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -171,82 +171,384 @@ class App(QMainWindow):
         self.conv(avg_kernel, image, height, width, padding=7)  # apply convolution
 
 
-    def rotate_left(self):
-        if (self.count != 1):
+    def median_operation(self, img, height, width, padding):
+
+        height2, width2, channel = self.inputImg.shape
+        temp_image = np.zeros((height2, width2, 3), dtype=np.uint8)
+
+        for i in range(padding, height+padding):
+            for j in range(padding, width+padding):
+                roi = img[i - padding:i + padding + 1, j - padding:j + padding + 1, 0] # take the part of image for median operation
+                median = np.median(roi)
+                temp_image[i - padding, j - padding, 0] = median
+
+                roi = img[i - padding:i + padding + 1, j - padding:j + padding + 1, 1]  # take the part of image for median operation
+                median = np.median(roi)
+                temp_image[i - padding, j - padding, 1] = median
+
+                roi = img[i - padding:i + padding + 1, j - padding:j + padding + 1, 2]  # take the part of image for median operation
+                median = np.median(roi)
+                temp_image[i - padding, j - padding, 2] = median
+
+        # place the image to the qlabel
+        pixmap_label = self.qlabel1
+        bytesPerLine = 3 * width2
+        qImg = QImage(temp_image.data, width2, height2, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
+        pixmap = QPixmap(qImg)
+        pixmap_label.setPixmap(pixmap)
+
+
+    def median_3(self):  # median filter 3x3
+        if (self.count == 0):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
-        centerx = width // 2
-        centery = height // 2
 
-        result_image = np.zeros((height, width, 3))
+        image = self.padding(1, self.inputImg)  # add padding to the image
+        self.median_operation(image, height, width, padding=1)
 
-        angle = np.pi/6
+
+    def median_5(self):  # median filter 5x5
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        image = self.padding(2, self.inputImg)  # add padding to the image
+        self.median_operation(image, height, width, padding=2)
+
+
+    def median_7(self):  # median filter 7x7
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        image = self.padding(3, self.inputImg)  # add padding to the image
+        self.median_operation(image, height, width, padding=3)
+
+
+    def median_9(self):  # median filter 9x9
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        image = self.padding(4, self.inputImg)  # add padding to the image
+        self.median_operation(image, height, width, padding=4)
+
+
+    def median_11(self):  # median filter 11x11
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        image = self.padding(5, self.inputImg)  # add padding to the image
+        self.median_operation(image, height, width, padding=5)
+
+
+    def median_13(self):  # median filter 13x13
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        image = self.padding(6, self.inputImg)  # add padding to the image
+        self.median_operation(image, height, width, padding=6)
+
+
+    def median_15(self):  # median filter 15x15
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        image = self.padding(7, self.inputImg)  # add padding to the image
+        self.median_operation(image, height, width, padding=7)
+
+
+    def gaussian_filter(self, sigma, size):
+
+        x, y = np.mgrid[-size // 2 + 1:size // 2 + 1, -size // 2 + 1:size // 2 + 1]
+        g = np.exp(-((x ** 2 + y ** 2) / (2.0 * sigma ** 2)))
+
+        return g / g.sum()
+
+    def gaussian_3(self):  # gaussian filter 3x3
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        image = self.padding(1, self.inputImg)  # add padding to the image
+        gaussian_kernel = self.gaussian_filter(sigma=5, size=3)  # create average kernel
+        self.conv(gaussian_kernel, image, height, width, padding=1)  # apply convolution
+
+
+    def gaussian_5(self):  # gaussian filter 5x5
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        image = self.padding(2, self.inputImg)  # add padding to the image
+        gaussian_kernel = self.gaussian_filter(sigma=5, size=5)  # create average kernel
+        self.conv(gaussian_kernel, image, height, width, padding=2)  # apply convolution
+
+
+    def gaussian_7(self):  # gaussian filter 7x7
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        image = self.padding(3, self.inputImg)  # add padding to the image
+        gaussian_kernel = self.gaussian_filter(sigma=5, size=7)  # create average kernel
+        self.conv(gaussian_kernel, image, height, width, padding=3)  # apply convolution
+
+
+    def gaussian_9(self):  # gaussian filter 9x9
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        image = self.padding(4, self.inputImg)  # add padding to the image
+        gaussian_kernel = self.gaussian_filter(sigma=5, size=9)  # create average kernel
+        self.conv(gaussian_kernel, image, height, width, padding=4)  # apply convolution
+
+
+    def gaussian_11(self):  # gaussian filter 11x11
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        image = self.padding(5, self.inputImg)  # add padding to the image
+        gaussian_kernel = self.gaussian_filter(sigma=5, size=11)  # create average kernel
+        self.conv(gaussian_kernel, image, height, width, padding=5)  # apply convolution
+
+
+    def gaussian_13(self):  # gaussian filter 9x9
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        image = self.padding(6, self.inputImg)  # add padding to the image
+        gaussian_kernel = self.gaussian_filter(sigma=5, size=13)  # create average kernel
+        self.conv(gaussian_kernel, image, height, width, padding=6)  # apply convolution
+
+
+    def gaussian_15(self):  # gaussian filter 15x15
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        image = self.padding(7, self.inputImg)  # add padding to the image
+        gaussian_kernel = self.gaussian_filter(sigma=5, size=15)  # create average kernel
+        self.conv(gaussian_kernel, image, height, width, padding=7)  # apply convolution
+
+
+    def rotate_left(self):
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        center_y = height//2
+        center_x = width//2
+
+        result_image = np.zeros((height, width, 3), dtype=np.uint8)
+
+        angle = np.pi/18
 
         for j in range(0, height):
             for k in range(0, width):
-                rot_mat = np.asarray([[np.cos(angle), np.sin(angle)], [-1 * np.sin(angle), np.cos(angle)]])
-                coord = np.matmul(rot_mat, np.asarray([k - centerx, j - centery]))
-                coord += [centerx, centery]
+                try:
+                    coord = [j-center_y, k-center_x, 1]
+                    rot_mat = np.asarray([[np.cos(angle), -1*np.sin(angle), 0],
+                                         [np.sin(angle), np.cos(angle), 0],
+                                         [0, 0, 1]])
 
-                pixel_value = self.inputImg[j, k, :]  # take original image pixel value BGR
-                result_image[int(coord[0]), int(coord[1]), :] = pixel_value  # place to the new coord
+                    inv_rot_mat = np.linalg.inv(rot_mat)
+                    new_coord = np.matmul(inv_rot_mat, coord)
+                    new_coord[0] += center_y
+                    new_coord[1] += center_x
+
+                    pixel_value = self.inputImg[int(new_coord[0]), int(new_coord[1]), :]
+
+                    result_image[j, k, :] = pixel_value
+
+                except Exception:
+                    pass
 
         pixmap_label = self.qlabel1
-        bytesPerLine = 3 * width
+        bytesPerLine = 3 * (width)
         qImg = QImage(result_image.data, (width), (height), bytesPerLine, QImage.Format_RGB888).rgbSwapped()
         pixmap = QPixmap(qImg)
         pixmap_label.setPixmap(pixmap)
 
 
     def rotate_right(self):
-        return NotImplementedError
-
-    def scale_twox(self):
-
-        if(self.count != 1):
+        if (self.count == 0):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
-
         height, width, channel = self.inputImg.shape
-        centerx = width // 2
-        centery = height // 2
 
-        print('centerx: ', centerx)
-        print('centery: ', centery)
+        center_y = height//2
+        center_x = width//2
 
-        scale = 2
+        result_image = np.zeros((height, width, 3), dtype=np.uint8)
 
-        result_image = np.zeros((height*scale, width*scale, 3))
-
+        angle = np.pi/18
 
         for j in range(0, height):
             for k in range(0, width):
-                scale_mat = np.eye(2)*2
-                scale_mat = np.linalg.inv(scale_mat)
-                coord = np.matmul(scale_mat, np.asarray([k - centerx, j - centery]))
-                #print('coord: ', coord)
-                #coord += [centerx, centery]
+                try:
+                    coord = [j-center_y, k-center_x, 1]
+                    rot_mat = np.asarray([[np.cos(angle), np.sin(angle), 0],
+                                         [-1*np.sin(angle), np.cos(angle), 0],
+                                         [0, 0, 1]])
 
-                pixel_value = self.inputImg[j, k, :]  # take original image pixel value BGR
-                result_image[int(coord[0]), int(coord[1]), :] = pixel_value  # place to the new coord
+                    inv_rot_mat = np.linalg.inv(rot_mat)
+                    new_coord = np.matmul(inv_rot_mat, coord)
+                    new_coord[0] += center_y
+                    new_coord[1] += center_x
 
+                    pixel_value = self.inputImg[int(new_coord[0]), int(new_coord[1]), :]
+
+                    result_image[j, k, :] = pixel_value
+
+                except Exception:
+                    pass
 
         pixmap_label = self.qlabel1
-        bytesPerLine = 3 * (width*scale)
-        qImg = QImage(result_image.data, (width*scale), (height*scale), bytesPerLine, QImage.Format_RGB888).rgbSwapped()
+        bytesPerLine = 3 * (width)
+        qImg = QImage(result_image.data, (width), (height), bytesPerLine, QImage.Format_RGB888).rgbSwapped()
         pixmap = QPixmap(qImg)
+        pixmap_label.setPixmap(pixmap)
 
+    def scale_twox(self):
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        result_image = np.zeros((height*2, width*2, 3), dtype=np.uint8)
+
+        for j in range(0, height*2):
+            for k in range(0, width*2):
+                try:
+                    coord = [j, k, 1]
+                    rot_mat = np.asarray([[2, 0, 0],
+                                         [0, 2, 0],
+                                         [0, 0, 1]])
+
+                    inv_rot_mat = np.linalg.inv(rot_mat)
+                    new_coord = np.matmul(inv_rot_mat, coord)
+
+                    pixel_value = self.inputImg[int(new_coord[0]), int(new_coord[1]), :]
+
+                    result_image[j, k, :] = pixel_value
+
+                except Exception:
+                    pass
+
+        pixmap_label = self.qlabel1
+        bytesPerLine = 3 * (width*2)
+        qImg = QImage(result_image.data, (width*2), (height*2), bytesPerLine, QImage.Format_RGB888).rgbSwapped()
+        pixmap = QPixmap(qImg)
         pixmap_label.setPixmap(pixmap)
 
     def scale_oneovertwox(self):
-        return NotImplementedError
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        center_y = height//2
+        center_x = width//2
+
+        result_image = np.zeros((height, width, 3), dtype=np.uint8)
+
+        for j in range(0, height):
+            for k in range(0, width):
+                coord = [j, k, 1]
+                new_coord = np.matmul(np.asarray([[1/2, 0, 0],
+                                                  [0, 1/2, 0],
+                                                  [0, 0, 1]]), coord)
+
+                pixel_value = self.inputImg[j, k, :]
+                result_image[int(new_coord[0]+(center_y/2)), int(new_coord[1]+(center_x/2)), :] = pixel_value
+
+        pixmap_label = self.qlabel1
+        bytesPerLine = 3 * (width)
+        qImg = QImage(result_image.data, (width), (height), bytesPerLine, QImage.Format_RGB888).rgbSwapped()
+        pixmap = QPixmap(qImg)
+        pixmap_label.setPixmap(pixmap)
+
 
     def trans_right(self):
-        return NotImplementedError
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+        result_image = np.zeros((height, width, 3), dtype=np.uint8)
+
+        for j in range(0, height):
+            for k in range(0, width):
+                try:
+                    coord = [k, j, 1]
+                    new_coord = np.matmul(np.asarray([[1, 0, 50],
+                                                      [0, 1, 0],
+                                                      [0, 0, 1]]), coord)
+                    
+                    pixel_value = self.inputImg[j, k, :]
+                    result_image[int(new_coord[1]), int(new_coord[0]), :] = pixel_value
+
+                except Exception:
+                    pass
+
+        pixmap_label = self.qlabel1
+        bytesPerLine = 3 * width
+        qImg = QImage(result_image.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
+        pixmap = QPixmap(qImg)
+        pixmap_label.setPixmap(pixmap)
+
 
     def trans_left(self):
-        return NotImplementedError
+        if (self.count == 0):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+        result_image = np.zeros((height, width, 3), dtype=np.uint8)
+
+        for j in range(0, height):
+            for k in range(0, width):
+                try:
+                    coord = [k, j, 1]
+                    rot_mat = np.asarray([[1, 0, -50],
+                                         [0, 1, 0],
+                                         [0, 0, 1]])
+
+                    inv_rot_mat = np.linalg.inv(rot_mat)
+                    new_coord = np.matmul(inv_rot_mat, coord)
+
+                    pixel_value = self.inputImg[int(new_coord[1]), int(new_coord[0]), :]
+
+                    result_image[j, k, :] = pixel_value
+
+                except Exception:
+                    pass
+
+        pixmap_label = self.qlabel1
+        bytesPerLine = 3 * width
+        qImg = QImage(result_image.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
+        pixmap = QPixmap(qImg)
+        pixmap_label.setPixmap(pixmap)
 
 
 
@@ -295,6 +597,7 @@ class App(QMainWindow):
         exitAct.triggered.connect(qApp.quit)
         fileMenu.addAction(exitAct)
 
+        ## ************ AVERAGE FILTERS ************ ##
         average_filters = QMenu('Average Filters', self)
         three_avg = QAction('3x3', self)
         five_avg = QAction('5x5', self)
@@ -321,7 +624,9 @@ class App(QMainWindow):
         average_filters.addAction(fifteen_avg)
 
         filters.addMenu(average_filters)
+        ## **************************************** ##
 
+        ## ************ GAUSSIAN FILTERS ************ ##
         gaussian_filters = QMenu('Gaussian Filters', self)
         three_gaus = QAction('3x3', self)
         five_gaus = QAction('5x5', self)
@@ -330,6 +635,14 @@ class App(QMainWindow):
         eleven_gaus = QAction('11x11', self)
         thirteen_gaus = QAction('13x13', self)
         fifteen_gaus = QAction('15x15', self)
+
+        three_gaus.triggered.connect(self.gaussian_3)
+        five_gaus.triggered.connect(self.gaussian_5)
+        seven_gaus.triggered.connect(self.gaussian_7)
+        nine_gaus.triggered.connect(self.gaussian_9)
+        eleven_gaus.triggered.connect(self.gaussian_11)
+        thirteen_gaus.triggered.connect(self.gaussian_13)
+        fifteen_gaus.triggered.connect(self.gaussian_15)
 
         gaussian_filters.addAction(three_gaus)
         gaussian_filters.addAction(five_gaus)
@@ -340,7 +653,9 @@ class App(QMainWindow):
         gaussian_filters.addAction(fifteen_gaus)
 
         filters.addMenu(gaussian_filters)
+        ## **************************************** ##
 
+        ## ************ MEDIAN FILTERS ************ ##
         median_filters = QMenu('Median Filters', self)
         three_med = QAction('3x3', self)
         five_med = QAction('5x5', self)
@@ -349,6 +664,14 @@ class App(QMainWindow):
         eleven_med = QAction('11x11', self)
         thirteen_med = QAction('13x13', self)
         fifteen_med = QAction('15x15', self)
+
+        three_med.triggered.connect(self.median_3)
+        five_med.triggered.connect(self.median_5)
+        seven_med.triggered.connect(self.median_7)
+        nine_med.triggered.connect(self.median_9)
+        eleven_med.triggered.connect(self.median_11)
+        thirteen_med.triggered.connect(self.median_13)
+        fifteen_med.triggered.connect(self.median_15)
 
         median_filters.addAction(three_med)
         median_filters.addAction(five_med)
@@ -359,6 +682,7 @@ class App(QMainWindow):
         median_filters.addAction(fifteen_med)
 
         filters.addMenu(median_filters)
+        ## **************************************** ##
 
 
 
