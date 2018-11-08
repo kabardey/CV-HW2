@@ -1,10 +1,8 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QHBoxLayout, QVBoxLayout, QMessageBox, QWidget, \
-    QGroupBox, QAction, QFileDialog, qApp
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QHBoxLayout, QVBoxLayout, QMessageBox, QWidget, QGroupBox, QAction, QFileDialog, qApp
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtGui import QPixmap, QImage, QIcon
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QFile
 import numpy as np
 import cv2
 
@@ -17,7 +15,7 @@ class App(QMainWindow):
         self.width = 1000
         self.height = 600
 
-        self.count = 0
+        self.imageOpen = False
 
         self.initUI()
 
@@ -26,7 +24,6 @@ class App(QMainWindow):
         imagePath, _ = QFileDialog.getOpenFileName()
         self.inputImg = cv2.imread(imagePath)
 
-
         pixmap_label = self.qlabel1
 
         height, width, channel = self.inputImg.shape
@@ -34,15 +31,14 @@ class App(QMainWindow):
         qImg = QImage(self.inputImg.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
         pixmap = QPixmap(qImg)
 
-        #pixmap = pixmap.scaled(300, 300, Qt.KeepAspectRatio)
         pixmap_label.setPixmap(pixmap)
 
-        self.count = self.count + 1
+        self.imageOpen = True
         # **************************************************************
 
     def saveImage(self):
-        # This function is called when the user clicks File->Target Image.
-        return NotImplementedError
+
+        self.pixmap.save("modifiedImage.png");
 
     def padding(self, padding_size, img):  # fill the outer border pixels according to kernel size
 
@@ -87,7 +83,7 @@ class App(QMainWindow):
 
 
     def average_3(self):  # average filter 3x3
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -98,7 +94,7 @@ class App(QMainWindow):
 
 
     def average_5(self):  # average filter 5x5
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -109,7 +105,7 @@ class App(QMainWindow):
 
 
     def average_7(self):  # average filter 7x7
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -120,7 +116,7 @@ class App(QMainWindow):
 
 
     def average_9(self):  # average filter 9x9
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -131,7 +127,7 @@ class App(QMainWindow):
 
 
     def average_11(self):  # average filter 11x11
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -142,7 +138,7 @@ class App(QMainWindow):
 
 
     def average_13(self):  # average filter 13x13
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -153,7 +149,7 @@ class App(QMainWindow):
 
 
     def average_15(self):  # average filter 15x15
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -191,7 +187,7 @@ class App(QMainWindow):
 
 
     def median_3(self):  # median filter 3x3
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -201,7 +197,7 @@ class App(QMainWindow):
 
 
     def median_5(self):  # median filter 5x5
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -211,7 +207,7 @@ class App(QMainWindow):
 
 
     def median_7(self):  # median filter 7x7
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -221,7 +217,7 @@ class App(QMainWindow):
 
 
     def median_9(self):  # median filter 9x9
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -231,7 +227,7 @@ class App(QMainWindow):
 
 
     def median_11(self):  # median filter 11x11
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -241,7 +237,7 @@ class App(QMainWindow):
 
 
     def median_13(self):  # median filter 13x13
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -251,7 +247,7 @@ class App(QMainWindow):
 
 
     def median_15(self):  # median filter 15x15
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -268,7 +264,7 @@ class App(QMainWindow):
         return g / g.sum()
 
     def gaussian_3(self):  # gaussian filter 3x3
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -279,7 +275,7 @@ class App(QMainWindow):
 
 
     def gaussian_5(self):  # gaussian filter 5x5
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -290,7 +286,7 @@ class App(QMainWindow):
 
 
     def gaussian_7(self):  # gaussian filter 7x7
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -301,7 +297,7 @@ class App(QMainWindow):
 
 
     def gaussian_9(self):  # gaussian filter 9x9
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -312,7 +308,7 @@ class App(QMainWindow):
 
 
     def gaussian_11(self):  # gaussian filter 11x11
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -323,7 +319,7 @@ class App(QMainWindow):
 
 
     def gaussian_13(self):  # gaussian filter 9x9
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -334,7 +330,7 @@ class App(QMainWindow):
 
 
     def gaussian_15(self):  # gaussian filter 15x15
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -345,7 +341,7 @@ class App(QMainWindow):
 
 
     def rotate_left(self):
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -380,12 +376,12 @@ class App(QMainWindow):
         pixmap_label = self.qlabel1
         bytesPerLine = 3 * (width)
         qImg = QImage(result_image.data, (width), (height), bytesPerLine, QImage.Format_RGB888).rgbSwapped()
-        pixmap = QPixmap(qImg)
-        pixmap_label.setPixmap(pixmap)
+        self.pixmap = QPixmap(qImg)
+        pixmap_label.setPixmap(self.pixmap)
 
 
     def rotate_right(self):
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -424,7 +420,7 @@ class App(QMainWindow):
         pixmap_label.setPixmap(pixmap)
 
     def scale_twox(self):
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -456,7 +452,7 @@ class App(QMainWindow):
         pixmap_label.setPixmap(pixmap)
 
     def scale_oneovertwox(self):
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -477,14 +473,14 @@ class App(QMainWindow):
                 result_image[int(new_coord[0]+(center_y/2)), int(new_coord[1]+(center_x/2)), :] = pixel_value
 
         pixmap_label = self.qlabel1
-        bytesPerLine = 3 * (width)
-        qImg = QImage(result_image.data, (width), (height), bytesPerLine, QImage.Format_RGB888).rgbSwapped()
+        bytesPerLine = 3 * width
+        qImg = QImage(result_image.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
         pixmap = QPixmap(qImg)
         pixmap_label.setPixmap(pixmap)
 
 
     def trans_right(self):
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
@@ -512,7 +508,7 @@ class App(QMainWindow):
 
 
     def trans_left(self):
-        if (self.count == 0):
+        if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
 
         height, width, channel = self.inputImg.shape
