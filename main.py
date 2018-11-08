@@ -40,6 +40,16 @@ class App(QMainWindow):
 
         self.pixmap.save("modifiedImage.png");
 
+    def placeImage(self, height, width, image):
+        # place the image to the qlabel
+
+        pixmap_label = self.qlabel1
+        bytesPerLine = 3 * width
+        qImg = QImage(image.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
+        self.pixmap = QPixmap(qImg)
+        pixmap_label.setPixmap(self.pixmap)
+
+
     def padding(self, padding_size, img):  # fill the outer border pixels according to kernel size
 
         height, width, channel = img.shape
@@ -74,12 +84,8 @@ class App(QMainWindow):
                 conv_value = (roi * kernel).sum()
                 temp_image[i - padding, j - padding, 2] = int(conv_value)
 
-        # place the image to the qlabel
-        pixmap_label = self.qlabel1
-        bytesPerLine = 3 * width2
-        qImg = QImage(temp_image.data, width2, height2, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
-        pixmap = QPixmap(qImg)
-        pixmap_label.setPixmap(pixmap)
+
+        self.placeImage(height2, width2, temp_image)
 
 
     def average_3(self):  # average filter 3x3
@@ -178,12 +184,8 @@ class App(QMainWindow):
                 median = np.median(roi)
                 temp_image[i - padding, j - padding, 2] = median
 
-        # place the image to the qlabel
-        pixmap_label = self.qlabel1
-        bytesPerLine = 3 * width2
-        qImg = QImage(temp_image.data, width2, height2, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
-        pixmap = QPixmap(qImg)
-        pixmap_label.setPixmap(pixmap)
+
+        self.placeImage(height2, width2, temp_image)
 
 
     def median_3(self):  # median filter 3x3
@@ -340,46 +342,6 @@ class App(QMainWindow):
         self.conv(gaussian_kernel, image, height, width, padding=7)  # apply convolution
 
 
-    def rotate_left(self):
-        if (self.imageOpen == False):
-            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
-
-        height, width, channel = self.inputImg.shape
-
-        center_y = height//2
-        center_x = width//2
-
-        result_image = np.zeros((height, width, 3), dtype=np.uint8)
-
-        angle = np.pi/18
-
-        for j in range(0, height):
-            for k in range(0, width):
-                try:
-                    coord = [j-center_y, k-center_x, 1]
-                    rot_mat = np.asarray([[np.cos(angle), -1*np.sin(angle), 0],
-                                         [np.sin(angle), np.cos(angle), 0],
-                                         [0, 0, 1]])
-
-                    inv_rot_mat = np.linalg.inv(rot_mat)
-                    new_coord = np.matmul(inv_rot_mat, coord)
-                    new_coord[0] += center_y
-                    new_coord[1] += center_x
-
-                    pixel_value = self.inputImg[int(new_coord[0]), int(new_coord[1]), :]
-
-                    result_image[j, k, :] = pixel_value
-
-                except Exception:
-                    pass
-
-        pixmap_label = self.qlabel1
-        bytesPerLine = 3 * (width)
-        qImg = QImage(result_image.data, (width), (height), bytesPerLine, QImage.Format_RGB888).rgbSwapped()
-        self.pixmap = QPixmap(qImg)
-        pixmap_label.setPixmap(self.pixmap)
-
-
     def rotate_right(self):
         if (self.imageOpen == False):
             return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
@@ -396,28 +358,61 @@ class App(QMainWindow):
         for j in range(0, height):
             for k in range(0, width):
                 try:
-                    coord = [j-center_y, k-center_x, 1]
-                    rot_mat = np.asarray([[np.cos(angle), np.sin(angle), 0],
-                                         [-1*np.sin(angle), np.cos(angle), 0],
+                    coord = [k - center_x, j - center_y, 1]
+                    rot_mat = np.asarray([[np.cos(angle), -1*np.sin(angle), 0],
+                                         [np.sin(angle), np.cos(angle), 0],
                                          [0, 0, 1]])
 
                     inv_rot_mat = np.linalg.inv(rot_mat)
                     new_coord = np.matmul(inv_rot_mat, coord)
-                    new_coord[0] += center_y
-                    new_coord[1] += center_x
+                    new_coord[1] += center_y
+                    new_coord[0] += center_x
 
-                    pixel_value = self.inputImg[int(new_coord[0]), int(new_coord[1]), :]
+                    pixel_value = self.inputImg[int(new_coord[1]), int(new_coord[0]), :]
 
                     result_image[j, k, :] = pixel_value
 
                 except Exception:
                     pass
 
-        pixmap_label = self.qlabel1
-        bytesPerLine = 3 * (width)
-        qImg = QImage(result_image.data, (width), (height), bytesPerLine, QImage.Format_RGB888).rgbSwapped()
-        pixmap = QPixmap(qImg)
-        pixmap_label.setPixmap(pixmap)
+        self.placeImage(height, width, result_image)
+
+
+    def rotate_left(self):
+        if (self.imageOpen == False):
+            return QMessageBox.question(self, 'Error Message', "Please, load the image", QMessageBox.Ok, QMessageBox.Ok)
+
+        height, width, channel = self.inputImg.shape
+
+        center_y = height//2
+        center_x = width//2
+
+        result_image = np.zeros((height, width, 3), dtype=np.uint8)
+
+        angle = np.pi/18
+
+        for j in range(0, height):
+            for k in range(0, width):
+                try:
+                    coord = [k-center_x, j-center_y, 1]
+                    rot_mat = np.asarray([[np.cos(angle), np.sin(angle), 0],
+                                         [-1*np.sin(angle), np.cos(angle), 0],
+                                         [0, 0, 1]])
+
+                    inv_rot_mat = np.linalg.inv(rot_mat)
+                    new_coord = np.matmul(inv_rot_mat, coord)
+                    new_coord[1] += center_y
+                    new_coord[0] += center_x
+
+                    pixel_value = self.inputImg[int(new_coord[1]), int(new_coord[0]), :]
+
+                    result_image[j, k, :] = pixel_value
+
+                except Exception:
+                    pass
+
+        self.placeImage(height, width, result_image)
+
 
     def scale_twox(self):
         if (self.imageOpen == False):
@@ -441,15 +436,11 @@ class App(QMainWindow):
                     pixel_value = self.inputImg[int(new_coord[0]), int(new_coord[1]), :]
 
                     result_image[j, k, :] = pixel_value
-
                 except Exception:
                     pass
 
-        pixmap_label = self.qlabel1
-        bytesPerLine = 3 * (width*2)
-        qImg = QImage(result_image.data, (width*2), (height*2), bytesPerLine, QImage.Format_RGB888).rgbSwapped()
-        pixmap = QPixmap(qImg)
-        pixmap_label.setPixmap(pixmap)
+        self.placeImage(height*2, width*2, result_image)
+
 
     def scale_oneovertwox(self):
         if (self.imageOpen == False):
@@ -457,26 +448,23 @@ class App(QMainWindow):
 
         height, width, channel = self.inputImg.shape
 
-        center_y = height//2
-        center_x = width//2
+        center_y = height // 2
+        center_x = width // 2
 
         result_image = np.zeros((height, width, 3), dtype=np.uint8)
 
         for j in range(0, height):
             for k in range(0, width):
                 coord = [j, k, 1]
-                new_coord = np.matmul(np.asarray([[1/2, 0, 0],
-                                                  [0, 1/2, 0],
+                new_coord = np.matmul(np.asarray([[1 / 2, 0, 0],
+                                                  [0, 1 / 2, 0],
                                                   [0, 0, 1]]), coord)
 
                 pixel_value = self.inputImg[j, k, :]
-                result_image[int(new_coord[0]+(center_y/2)), int(new_coord[1]+(center_x/2)), :] = pixel_value
+                result_image[int(new_coord[0] + (center_y / 2)), int(new_coord[1] + (center_x / 2)), :] = pixel_value
 
-        pixmap_label = self.qlabel1
-        bytesPerLine = 3 * width
-        qImg = QImage(result_image.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
-        pixmap = QPixmap(qImg)
-        pixmap_label.setPixmap(pixmap)
+
+        self.placeImage(height, width, result_image)
 
 
     def trans_right(self):
@@ -500,11 +488,7 @@ class App(QMainWindow):
                 except Exception:
                     pass
 
-        pixmap_label = self.qlabel1
-        bytesPerLine = 3 * width
-        qImg = QImage(result_image.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
-        pixmap = QPixmap(qImg)
-        pixmap_label.setPixmap(pixmap)
+        self.placeImage(height, width, result_image)
 
 
     def trans_left(self):
@@ -532,12 +516,7 @@ class App(QMainWindow):
                 except Exception:
                     pass
 
-        pixmap_label = self.qlabel1
-        bytesPerLine = 3 * width
-        qImg = QImage(result_image.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
-        pixmap = QPixmap(qImg)
-        pixmap_label.setPixmap(pixmap)
-
+        self.placeImage(height, width, result_image)
 
 
     def initUI(self):
